@@ -10,6 +10,7 @@ import (
 	"github.com/swaggo/gin-swagger/swaggerFiles"
 
 	"github.com/maybaby/gscheduler/controllers/api"
+	"github.com/maybaby/gscheduler/controllers/api/v1"
 	"github.com/maybaby/gscheduler/middlewares/jwt"
 	"github.com/maybaby/gscheduler/pkg/export"
 	"github.com/maybaby/gscheduler/pkg/qrcode"

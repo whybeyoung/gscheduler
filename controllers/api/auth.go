@@ -8,10 +8,8 @@ import (
 	"github.com/astaxie/beego/validation"
 	"github.com/gin-gonic/gin"
 
-	//"github.com/maybaby/gscheduler/pkg/app"
-	//"github.com/maybaby/gscheduler/pkg/e"
-	//"github.com/maybaby/gscheduler/pkg/util"
-	//"github.com/maybaby/gscheduler/services/auth_service"
+	"github.com/maybaby/gscheduler/pkg/app"
+	"github.com/maybaby/gscheduler/services/auth_service"
 )
 
 type auth struct {
