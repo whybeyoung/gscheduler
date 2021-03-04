@@ -31,6 +31,11 @@ func InitRouter() *gin.Engine {
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 	r.POST("/upload", api.UploadImage)
 
+	//test
+	r.GET("/api/v1/call", v1.CallRpc)
+	r.GET("/api/v1/process/test", v1.TestCreateProcessDefinition)
+	r.POST("/api/v1/process/save", v1.CreateProcessDefinition)
+
 	apiv1 := r.Group("/api/v1")
 	apiv1.Use(jwt.JWT())
 	{
@@ -59,6 +64,9 @@ func InitRouter() *gin.Engine {
 		apiv1.DELETE("/articles/:id", v1.DeleteArticle)
 		//生成文章海报
 		apiv1.POST("/articles/poster/generate", v1.GenerateArticlePoster)
+
+		// 保存流程定义
+		//apiv1.GET("/save", v1.CreateProcessDefinition)
 	}
 
 	return r
