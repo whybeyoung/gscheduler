@@ -2,9 +2,19 @@ package process_service
 
 import (
 	"encoding/json"
+	"errors"
 	"github.com/maybaby/gscheduler/models"
+	"github.com/maybaby/gscheduler/pkg/e"
+	"github.com/maybaby/gscheduler/pkg/setting"
 	"github.com/maybaby/gscheduler/services/task_service"
 	"time"
+)
+
+type RunMode int32
+
+const (
+	Serial RunMode = iota
+	Parallel
 )
 
 type ProcessData struct {
@@ -78,5 +88,17 @@ func (p *ProcessData) UnmarshalJSON(data []byte) error {
 	p.Timeout = aux.Timeout
 	p.Tasks = aux.Tasks
 	p.GlobalParams = aux.GlobalParams
+	return nil
+}
+
+func ExecProcessInstance(groupId, processDefinitionId, workerGroup string, timeout int, runMode RunMode) error {
+	if timeout <= 0 || timeout > setting.MAX_TASK_TIMEOUT {
+		return errors.New(string(e.ERROR_PROCESS_TIMEOUT))
+	}
+
+	_, err := models.GetProcessDefinition(processDefinitionId)
+	if err != nil {
+		return errors.New(string(e.ERROR_PROCESS_NOTFOUND))
+	}
 	return nil
 }

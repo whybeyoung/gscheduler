@@ -1,6 +1,7 @@
 package models
 
 import (
+	"github.com/jinzhu/gorm"
 	"time"
 )
 
@@ -30,4 +31,15 @@ func SaveDefinition(sd *ProcessDefinition) error {
 	}
 
 	return nil
+}
+
+// GetProcessDefinition Get a single ProcessDefinition based on ID
+func GetProcessDefinition(id string) (*ProcessDefinition, error) {
+	var pd ProcessDefinition
+	err := db.Where("id = ? ", id).First(&pd).Error
+	if err != nil && err != gorm.ErrRecordNotFound {
+		return nil, err
+	}
+
+	return &pd, nil
 }

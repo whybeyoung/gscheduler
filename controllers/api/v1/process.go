@@ -71,7 +71,7 @@ func TestCreateProcessDefinition(c *gin.Context) {
 
 }
 
-// @Summary 保存任务定义接口 a rpc procedure
+// @Summary 保存任务定义接口
 // @Produce  json
 // @Success 200 {object} app.Response
 // @Failure 500 {object} app.Response
@@ -98,7 +98,7 @@ func CreateProcessDefinition(c *gin.Context) {
 		return
 	}
 
-	appG.Response(http.StatusOK, e.ERROR_AUTH_TOKEN, json_.Name)
+	appG.Response(http.StatusOK, e.SUCCESS, json_.Name)
 
 	//registryAddr := "http://localhost:9999/_gsrpc_/registry"
 	////time.Sleep(time.Second*16)
@@ -111,5 +111,41 @@ type AddProcessDefineJson struct {
 	GroupId     string                       `form:"groupId" json:"groupId"`
 	ProcessData *process_service.ProcessData `form:"processData" json:"processData"`
 	Desc        string                       `form:"desc" json:"desc"`
+	//TODO 定义 dag的连接 暂时不支持dag
+}
+
+// @Summary 执行一个任务定义接口 启动一个任务定义，并创建一个任务实例
+// @Produce  json
+// @Success 200 {object} app.Response
+// @Failure 500 {object} app.Response
+// @Router /api/v1/process/start [post]
+func CreateAndStartProcessInstance(c *gin.Context) {
+	var (
+		appG  = app.Gin{C: c}
+		json_ StartProcessDefineJson
+	)
+	c.BindJSON(&json_)
+	err := process_service.ExecProcessInstance(
+		json_.GroupId,
+		json_.ProcessDefinitionId,
+		json_.WorkerGroup,
+		json_.Timeout,
+		process_service.Serial)
+
+	if err != nil {
+		appG.Response(http.StatusForbidden, e.ERROR, err)
+		return
+	}
+
+	appG.Response(http.StatusOK, e.SUCCESS, nil)
+
+}
+
+type StartProcessDefineJson struct {
+	GroupId             string `form:"groupId" json:"groupId"`
+	ProcessDefinitionId string `form:"processDefinitionId" json:"processDefinitionId"`
+	FailureStrategy     string `form:"failureStrategy" json:"failureStrategy"` //失败策略
+	WorkerGroup         string `form:"workerGroup" json:"workerGroup"`         //worker组别
+	Timeout             int    `form:"timeout" json:"timeout"`
 	//TODO 定义 dag的连接 暂时不支持dag
 }

@@ -25,7 +25,7 @@ func foo(xc *client_service.XClient, ctx context.Context, typ, serviceMethod str
 	if err != nil {
 		log.Printf("%s %s error: %v", typ, serviceMethod, err)
 	} else {
-		log.Printf("%s %s success: %d + %d = %d", typ, serviceMethod, command.CType, command.GetBody(), reply)
+		log.Printf("%s %s success: %d + %d = %d", typ, serviceMethod, command.CommandType, command.CommandParam, reply)
 	}
 }
 
@@ -35,13 +35,11 @@ func call(registry string) {
 	defer func() { _ = xc.Close() }()
 	// send request & receive response
 	var wg sync.WaitGroup
-	for i := 0; i < 5; i++ {
-		wg.Add(1)
-		go func(i int) {
-			defer wg.Done()
-			foo(xc, context.Background(), "call", "TaskExecuteProcessor.Process", &models.Command{CType: 1})
-		}(i)
-	}
+	wg.Add(1)
+	go func(i int) {
+		defer wg.Done()
+		foo(xc, context.Background(), "call", "TaskExecuteProcessor.Process", &models.Command{CommandType: 1})
+	}(1)
 	wg.Wait()
 }
 
