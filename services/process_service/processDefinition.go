@@ -91,14 +91,43 @@ func (p *ProcessData) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func ExecProcessInstance(groupId, processDefinitionId, workerGroup string, timeout int, runMode RunMode) error {
+/*
+ 启动1个 Process实例， 分解 processDefintion 为多个Command Task
+*/
+func ExecProcessInstance(ctype models.CommandType, groupId, processDefinitionId, workerGroup string, timeout int, runMode RunMode) error {
 	if timeout <= 0 || timeout > setting.MAX_TASK_TIMEOUT {
 		return errors.New(string(e.ERROR_PROCESS_TIMEOUT))
 	}
 
-	_, err := models.GetProcessDefinition(processDefinitionId)
+	pd, err := models.GetProcessDefinition(processDefinitionId)
 	if err != nil {
 		return errors.New(string(e.ERROR_PROCESS_NOTFOUND))
 	}
+	if pd == nil {
+		return errors.New(string(e.ERROR_PROCESS_NOTFOUND))
+
+	}
+	// 简单校验
+	err = pd.CheckProcessDefinitionValid()
+	processData := &ProcessData{}
+	processData.UnmarshalJSON([]byte(pd.ProcessDefinitionJson))
+
+	/**
+	 * create command
+	 */
+	cmd := &models.Command{
+		CommandType:         ctype,
+		ProcessDefinitionId: pd.ID,
+		ExecutorId:          "",
+		WorkerGroup:         workerGroup,
+	}
+	err = models.SaveCommand(cmd)
+	if err != nil {
+		return err
+	}
 	return nil
+}
+
+func StartNewProcessInstance(p *models.ProcessDefinition) {
+
 }

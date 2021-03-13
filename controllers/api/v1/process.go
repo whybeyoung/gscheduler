@@ -3,6 +3,7 @@ package v1
 import (
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"github.com/maybaby/gscheduler/models"
 	"github.com/maybaby/gscheduler/pkg/app"
 	"github.com/maybaby/gscheduler/pkg/e"
 	"github.com/maybaby/gscheduler/services/process_service"
@@ -126,6 +127,7 @@ func CreateAndStartProcessInstance(c *gin.Context) {
 	)
 	c.BindJSON(&json_)
 	err := process_service.ExecProcessInstance(
+		models.START_PROCESS,
 		json_.GroupId,
 		json_.ProcessDefinitionId,
 		json_.WorkerGroup,

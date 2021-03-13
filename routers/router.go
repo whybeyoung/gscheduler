@@ -35,6 +35,7 @@ func InitRouter() *gin.Engine {
 	r.GET("/api/v1/call", v1.CallRpc)
 	r.GET("/api/v1/process/test", v1.TestCreateProcessDefinition)
 	r.POST("/api/v1/process/save", v1.CreateProcessDefinition)
+	r.POST("/api/v1/process/start", v1.CreateAndStartProcessInstance)
 
 	apiv1 := r.Group("/api/v1")
 	apiv1.Use(jwt.JWT())

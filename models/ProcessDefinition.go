@@ -6,6 +6,7 @@ import (
 )
 
 type ProcessDefinition struct {
+	ID                    string    `json:"id"`
 	Name                  string    `json:"name"`
 	Version               string    `json:"version"`
 	GroupId               string    `json:"group_id"`
@@ -24,6 +25,11 @@ func (ProcessDefinition) TableName() string {
 	return "process_definition"
 }
 
+// 校验pd 合法性
+func (p *ProcessDefinition) CheckProcessDefinitionValid() error {
+	return nil
+}
+
 // CheckAuth checks if authentication information exists
 func SaveDefinition(sd *ProcessDefinition) error {
 	if err := db.Create(&sd).Error; err != nil {
@@ -36,7 +42,7 @@ func SaveDefinition(sd *ProcessDefinition) error {
 // GetProcessDefinition Get a single ProcessDefinition based on ID
 func GetProcessDefinition(id string) (*ProcessDefinition, error) {
 	var pd ProcessDefinition
-	err := db.Where("id = ? ", id).First(&pd).Error
+	err := db.Where("id = ? ", id).Table("t_gs_process_definition").First(&pd).Error
 	if err != nil && err != gorm.ErrRecordNotFound {
 		return nil, err
 	}

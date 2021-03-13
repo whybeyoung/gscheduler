@@ -36,6 +36,15 @@ func (Command) TableName() string {
 	return "command"
 }
 
+// CheckAuth checks if authentication information exists
+func SaveCommand(c *Command) error {
+	if err := db.Create(&c).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
 type TaskDependType struct {
 }
 
