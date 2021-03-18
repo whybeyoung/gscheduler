@@ -94,7 +94,7 @@ func (p *ProcessData) UnmarshalJSON(data []byte) error {
 /*
  启动1个 Process实例， 分解 processDefintion 为多个Command Task
 */
-func ExecProcessInstance(ctype models.CommandType, groupId, processDefinitionId, workerGroup string, timeout int, runMode RunMode) error {
+func ExecProcessInstance(cmdType models.CommandType, groupId, processDefinitionId, workerGroup string, timeout int, runMode RunMode) error {
 	if timeout <= 0 || timeout > setting.MAX_TASK_TIMEOUT {
 		return errors.New(string(e.ERROR_PROCESS_TIMEOUT))
 	}
@@ -116,7 +116,7 @@ func ExecProcessInstance(ctype models.CommandType, groupId, processDefinitionId,
 	 * create command
 	 */
 	cmd := &models.Command{
-		CommandType:         ctype,
+		CommandType:         cmdType,
 		ProcessDefinitionId: pd.ID,
 		ExecutorId:          "",
 		WorkerGroup:         workerGroup,
