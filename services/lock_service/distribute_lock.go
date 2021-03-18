@@ -15,7 +15,7 @@ import (
 
 type Locker interface {
 	InitLocker()
-	GetLock() *gomysqllock.Lock
+	GetLock(name string) *gomysqllock.Lock
 	ReleaseLock(*gomysqllock.Lock) error
 }
 type MysqlLocker struct {
@@ -36,9 +36,8 @@ func (m *MysqlLocker) InitLocker() {
 	m.locker = locker
 }
 
-func (m *MysqlLocker) GetLock() *gomysqllock.Lock {
-	lock, _ := m.locker.Obtain("foo")
-	fmt.Println("我拿到了锁", os.Args[0])
+func (m *MysqlLocker) GetLock(name string) *gomysqllock.Lock {
+	lock, _ := m.locker.Obtain(name)
 
 	return lock
 }
@@ -48,7 +47,6 @@ func (m *MysqlLocker) ReleaseLock(l *gomysqllock.Lock) error {
 		return errors.New("Null")
 
 	}
-	fmt.Println("将要释放锁", os.Args[0])
 	l.Release()
 	return nil
 }

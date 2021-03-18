@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/maybaby/gscheduler/models"
 	"github.com/maybaby/gscheduler/pkg/e"
+	"github.com/maybaby/gscheduler/pkg/logging"
 	"github.com/maybaby/gscheduler/pkg/setting"
 	"github.com/maybaby/gscheduler/services/task_service"
 	"time"
@@ -128,6 +129,13 @@ func ExecProcessInstance(cmdType models.CommandType, groupId, processDefinitionI
 	return nil
 }
 
-func StartNewProcessInstance(p *models.ProcessDefinition) {
+func FindOneCommand() (*models.Command, error) {
+	cmd, err := models.GetOneCommandToRun()
+	return cmd, err
+}
 
+func HandleCommand(command *models.Command) (*models.ProcessInstance, error) {
+	logging.Info("Find one Command")
+	models.DeleteCommand(command)
+	return nil, nil
 }

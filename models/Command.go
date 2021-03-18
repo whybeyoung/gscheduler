@@ -1,6 +1,9 @@
 package models
 
-import "time"
+import (
+	"github.com/maybaby/gscheduler/pkg/logging"
+	"time"
+)
 
 type Command struct {
 	Id string `json:"id"`
@@ -45,11 +48,20 @@ func SaveCommand(c *Command) error {
 	return nil
 }
 
-type TaskDependType struct {
+func GetOneCommandToRun() (*Command, error) {
+	var cmd Command
+	err := db.Table("t_gs_command").First(&cmd).Error
+	logging.Info("Found one command")
+	return &cmd, err
 }
 
-type WarningType struct {
+func DeleteCommand(command *Command) error {
+	err := db.Table("t_gs_command").Delete(command).Error
+	return err
 }
 
-type FailureStrategy struct {
-}
+type TaskDependType int64
+
+type WarningType int64
+
+type FailureStrategy int64

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	geerpc "github.com/maybaby/gscheduler"
+	"github.com/maybaby/gscheduler/cmd/master/runner"
 	"github.com/maybaby/gscheduler/services/registry_service"
 	"log"
 	"net"
@@ -90,6 +91,9 @@ func main() {
 		WriteTimeout:   writeTimeout,
 		MaxHeaderBytes: maxHeaderBytes,
 	}
+	logging.Info("Starting master scheudler")
+	ms := &runner.MasterSchedulerService{}
+	ms.Run()
 
 	log.Printf("[info] start http server listening %s", endPoint)
 
