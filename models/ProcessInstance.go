@@ -5,23 +5,34 @@ import (
 	"time"
 )
 
+type Priority int32
+
+const (
+	HIGHEST Priority = iota
+	HIGH
+	MEDIUM
+	LOW
+	LOWEST
+)
+
 type ProcessInstance struct {
-	ID                  string          `json:"id"`
-	ProcessDefinitionId string          `json:"processDefinitionId"`
-	State               ExecutionStatus `json:"state"`
-	Flag                Flag            `json:"flag"`
-	startTime           time.Time       `json:"startTime"`
-	endTime             time.Time       `json:"endTime"`
-	Runtimes            int             `json:"runtimes"`
-	Name                string          `json:"name"`
-	Host                string          `json:"host"`
-	CommandType         CommandType     `json:"commandType"`
-	commandParam        string          `json:"commandParam"`
-	maxTryTimes         int             `json:"maxTryTimes"`
-	scheduleTime        time.Time       `json:"scheduleTime"`
-	processInstanceJson string          `json:"processInstanceJson"`
-	workerGroup         string          `json:"workerGroup"`
-	Timeout             int             `json:"timeout"`
+	ID                      string          `json:"id"`
+	ProcessDefinitionId     int             `json:"processDefinitionId"`
+	State                   ExecutionStatus `json:"state"`
+	Flag                    Flag            `json:"flag"`
+	StartTime               time.Time       `json:"startTime"`
+	EndTime                 time.Time       `json:"endTime"`
+	RunTimes                int             `json:"runTimes"`
+	Name                    string          `json:"name"`
+	Host                    string          `json:"host"`
+	CommandType             CommandType     `json:"commandType"`
+	CommandParam            string          `json:"commandParam"`
+	MaxTryTimes             int             `json:"maxTryTimes"`
+	ScheduleTime            time.Time       `json:"scheduleTime"`
+	ProcessInstanceJson     string          `json:"processInstanceJson"`
+	WorkerGroup             string          `json:"workerGroup"`
+	Timeout                 int             `json:"timeout"`
+	ProcessInstancePriority Priority        `json:"process_instance_priority"`
 }
 
 // TableName 会将 User 的表名重写为 `process_definition`

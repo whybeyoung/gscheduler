@@ -24,10 +24,11 @@ type MysqlLocker struct {
 }
 
 func (m *MysqlLocker) InitLocker() {
-	url := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=utf8&parseTime=True&loc=Local",
+	url := fmt.Sprintf("%s:%s@tcp(%s:%d)/%s?charset=utf8&parseTime=True&loc=Local",
 		setting.DatabaseSetting.User,
 		setting.DatabaseSetting.Password,
 		setting.DatabaseSetting.Host,
+		setting.DatabaseSetting.Port,
 		setting.DatabaseSetting.Name)
 	fmt.Println("初始化Locker中", url)
 	db, _ := sql.Open(setting.DatabaseSetting.Type, url)

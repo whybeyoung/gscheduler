@@ -3,6 +3,7 @@ package logging
 import (
 	"fmt"
 	"github.com/maybaby/gscheduler/pkg/file"
+	"io"
 	"log"
 	"os"
 	"path/filepath"
@@ -36,11 +37,17 @@ func Setup() {
 	filePath := getLogFilePath()
 	fileName := getLogFileName()
 	F, err = file.MustOpen(fileName, filePath)
+	// 设置日志输出到文件
+	// 定义多个写入器
+	writers := []io.Writer{
+		F,
+		os.Stdout}
+	fileAndStdoutWriter := io.MultiWriter(writers...)
 	if err != nil {
 		log.Fatalf("logging.Setup err: %v", err)
 	}
 
-	logger = log.New(F, DefaultPrefix, log.LstdFlags)
+	logger = log.New(fileAndStdoutWriter, DefaultPrefix, log.LstdFlags)
 }
 
 // Debug output logs at debug level

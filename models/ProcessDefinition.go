@@ -6,7 +6,7 @@ import (
 )
 
 type ProcessDefinition struct {
-	ID                    string    `json:"id"`
+	ID                    int       `json:"id"`
 	Name                  string    `json:"name"`
 	Version               string    `json:"version"`
 	GroupId               string    `json:"group_id"`
@@ -40,10 +40,10 @@ func SaveDefinition(sd *ProcessDefinition) error {
 }
 
 // GetProcessDefinition Get a single ProcessDefinition based on ID
-func GetProcessDefinition(id string) (*ProcessDefinition, error) {
+func GetProcessDefinition(id int) (*ProcessDefinition, error) {
 	var pd ProcessDefinition
-	err := db.Where("id = ? ", id).Table("t_gs_process_definition").First(&pd).Error
-	if err != nil && err != gorm.ErrRecordNotFound {
+	err := db.Table("t_gs_process_definition").First(&pd, id).Error
+	if err != nil || err == gorm.ErrRecordNotFound {
 		return nil, err
 	}
 

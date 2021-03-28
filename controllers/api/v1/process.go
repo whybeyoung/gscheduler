@@ -145,7 +145,7 @@ func CreateAndStartProcessInstance(c *gin.Context) {
 
 type StartProcessDefineJson struct {
 	GroupId             string `form:"groupId" json:"groupId"`
-	ProcessDefinitionId string `form:"processDefinitionId" json:"processDefinitionId"`
+	ProcessDefinitionId int    `form:"processDefinitionId" json:"processDefinitionId"`
 	FailureStrategy     string `form:"failureStrategy" json:"failureStrategy"` //失败策略
 	WorkerGroup         string `form:"workerGroup" json:"workerGroup"`         //worker组别
 	Timeout             int    `form:"timeout" json:"timeout"`

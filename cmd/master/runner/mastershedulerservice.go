@@ -2,6 +2,7 @@ package runner
 
 import (
 	"github.com/maybaby/gscheduler/pkg/logging"
+	"github.com/maybaby/gscheduler/pkg/util"
 	"github.com/maybaby/gscheduler/services/lock_service"
 	"github.com/maybaby/gscheduler/services/process_service"
 	"time"
@@ -31,9 +32,16 @@ func (m *MasterSchedulerService) Run() error {
 			lock := locker.GetLock("master")
 			cmd, err := process_service.FindOneCommand()
 			if cmd != nil && err == nil {
-				process_service.HandleCommand(cmd)
+				processInstance, err := process_service.HandleCommand(cmd, util.GetLocalAddress())
+				if processInstance != nil && err == nil {
+					// TODO support Dag split here
+					logging.Info("开始分解ProcessInstance, 切割为Task ...")
+					meg := &MasterExecGoroutine{
+						cmd,
+					}
+					meg.Run()
+				}
 			} else {
-				logging.Info("Not Found Command")
 				time.Sleep(1 * time.Second)
 			}
 			lock.Release()

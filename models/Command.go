@@ -1,7 +1,6 @@
 package models
 
 import (
-	"github.com/maybaby/gscheduler/pkg/logging"
 	"time"
 )
 
@@ -10,7 +9,7 @@ type Command struct {
 
 	CommandType CommandType `json:"command_type"`
 
-	ProcessDefinitionId string `json:"process_definition_id"`
+	ProcessDefinitionId int `json:"process_definition_id"`
 
 	ExecutorId string `json:"executor_id"`
 
@@ -31,6 +30,8 @@ type Command struct {
 	ScheduleTime time.Time `json:"schedule_time"`
 
 	WorkerGroup string `json:"worker_group"`
+
+	ProcessInstancePriority Priority `json:"process_instance_priority"`
 }
 
 // TableName 会将 User 的表名重写为 `process_definition`
@@ -51,7 +52,6 @@ func SaveCommand(c *Command) error {
 func GetOneCommandToRun() (*Command, error) {
 	var cmd Command
 	err := db.Table("t_gs_command").First(&cmd).Error
-	logging.Info("Found one command")
 	return &cmd, err
 }
 
